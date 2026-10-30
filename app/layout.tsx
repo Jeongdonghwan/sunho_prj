@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s` },
   robots: { index: true, follow: true },
-  icons: { icon: '/img/logo.png' },
+  icons: { icon: [{ url: '/favicon.ico', sizes: 'any' }, { url: '/icon.png', type: 'image/png', sizes: '192x192' }], apple: '/apple-touch-icon.png' },
   // TODO: 서치어드바이저·서치콘솔 소유확인 코드 (verification: { other: { 'naver-site-verification': '...' } })
 };
 

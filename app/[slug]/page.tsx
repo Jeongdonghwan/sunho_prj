@@ -5,7 +5,7 @@ import { OPEN_PAGES, PLACES, getPage, pagePath, pageEncodedPath, canonicalPath, 
 import { compose } from '../../lib/compose';
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, serviceJsonLd } from '../../lib/jsonld';
 import { BRAND, shareMeta } from '../../lib/site';
-import { Actions, IconArrow, JsonLd, SectionHead, Ticker } from '../../components/Common';
+import { Actions, IconArrow, JsonLd, SectionHead } from '../../components/Common';
 
 export const dynamicParams = false;
 
@@ -83,7 +83,6 @@ export default function KeywordPage({ params }: { params: { slug: string } }) {
         </section>
       </div>
 
-      <Ticker items={c.ticker} />
 
       <div className="wrap content">
         <section className="sec">

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CASES, OPEN_PAGES, PLACES, REGIONS, openRegions, regionPages, regionPath, pagePath, pageEncodedPath, inSitemap, postOf } from '../lib/data';
 import { BRAND, CONTACT, TRUST, KAKAO, YOUTUBE, shareMeta } from '../lib/site';
 import { faqJsonLd, itemListJsonLd } from '../lib/jsonld';
-import { Actions, IconArrow, IconMsg, JsonLd, PhoneBlock, SectionHead, Ticker } from '../components/Common';
+import { Actions, IconArrow, IconMsg, JsonLd, PhoneBlock, SectionHead } from '../components/Common';
 
 const HOME_TITLE = `${BRAND} | 정화조수리·변기막힘·누수탐지 업체`;
 const HOME_DESC = '정화조·누수탐지공사·변기·하수구 전문 선호환경. 365일 24시간 접수, 수도권 전지역 출동. 진단 후 견적, 동의 후 작업, 본사 무상 A/S 2년. 인천·시흥·부천·강서·구로 지역 안내.';
@@ -51,7 +51,6 @@ export default function Home() {
   const regions = openRegions();
   // 메인 캐러셀: 시·구·생활권 대표 페이지 (최대 30)
   const hubs = OPEN_PAGES.filter((p) => inSitemap(p) && PLACES[p.place].kind !== '동').slice(0, 30);
-  const tickerNames = Array.from(new Set(OPEN_PAGES.map((p) => PLACES[p.place].name))).slice(0, 26);
   const svcLink = (svc: string) => OPEN_PAGES.find((p) => inSitemap(p) && p.service === svc && p.place === '인천') || OPEN_PAGES.find((p) => p.service === svc);
 
   return (
@@ -78,7 +77,6 @@ export default function Home() {
         </ul>
       </div>
 
-      <Ticker items={tickerNames} />
 
       <div className="wrap content">
         <section className="sec">
