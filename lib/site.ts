@@ -1,8 +1,8 @@
 // 사이트 설정 — 연락처·사업자 정보·도메인은 이 파일만 고치면 전 페이지에 반영된다.
 // 근거: 기존 홈페이지(https://sunhoenv.com/) 메인·회사소개·하위 메뉴 표기 (2026-10-28 확인).
 
-// TODO(도메인 확정 후): SITE_URL 환경변수로 넘기거나 기본값 교체. 배포: bash scripts/deploy.sh <단계> <URL>
-export const SITE_URL = process.env.SITE_URL || 'https://sunho.example';
+// 배포: bash scripts/deploy.sh <단계 1~4> <URL>
+export const SITE_URL = process.env.SITE_URL || 'https://xn--289ap00b4mpxd.kr'; // 선호환경.kr (퓨니코드)
 export const BRAND = '선호환경';
 export const SITE_NAME = `${BRAND} | 정화조·변기막힘·누수탐지`;
 
@@ -40,8 +40,8 @@ export const TRUST = [
 ];
 
 // 순차 오픈: 이 단계 이하의 페이지만 빌드·사이트맵·내부링크에 포함된다. 단계 = 키워드 엑셀 우선순위
-//   OPEN_WAVE=1 npx next build  (1 = 권역 대표 15 / 2 = +시·구·생활권 303 / 3 = 전체 1,020)
-export const OPEN_WAVE = Number(process.env.OPEN_WAVE || 3);
+//   OPEN_WAVE=1~4 (data/drip.json 일정: 오픈일 25% → 2일 50% → 4일 75% → 6일 100%)
+export const OPEN_WAVE = Number(process.env.OPEN_WAVE || 4);
 
 // 표기만 다른 키워드 페이지(인천/인천시/인천광역시, 부평/부평구, 구월/구월동 …)는 대표 페이지로 canonical + 사이트맵 제외
 export const MERGE_VARIANTS = true;
