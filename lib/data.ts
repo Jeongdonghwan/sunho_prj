@@ -4,7 +4,7 @@ import placesData from '../data/places.json';
 import casesData from '../data/cases.json';
 import { OPEN_WAVE, MERGE_VARIANTS } from './site';
 
-export type Svc = '누수탐지' | '변기막힘' | '정화조수리' | '정화조';
+export type Svc = '누수탐지' | '변기막힘' | '정화조수리' | '정화조' | '하수구막힘';
 export type Ctx = 'apt' | 'villa' | 'house' | 'shop' | 'island';
 export interface Page {
   n: number; kw: string; slug: string; label: string; place: string; region: string; unit: string;
@@ -63,7 +63,7 @@ export const rotate = <T,>(arr: T[], seed: string, salt = ''): T[] => {
 };
 
 // 서비스 묶음 (정화조·정화조수리는 같은 묶음) — 사진 태그와 같은 이름
-export const svcGroup = (s: string) => (s === '정화조' || s === '정화조수리' ? '정화조' : s === '변기막힘' ? '변기' : '누수탐지');
+export const svcGroup = (s: string) => (s === '정화조' || s === '정화조수리' ? '정화조' : s === '변기막힘' ? '변기' : s === '하수구막힘' ? '하수구' : '누수탐지');
 
 // 관련 페이지 — 열린 대표 페이지만. 같은 장소 다른 서비스 / 같은 생활권 묶음 이웃 / 같은 권역 시·구·생활권 / 다른 권역
 export function related(p: Page) {
@@ -72,7 +72,7 @@ export function related(p: Page) {
   const samePlace = pool.filter((x) => x.place === p.place);
   const sameZone = rotate(pool.filter((x) => x.place !== p.place && PLACES[x.place].zone === P.zone && x.service === p.service), p.slug, 'rel').slice(0, 8);
   const sameRegion = rotate(pool.filter((x) => x.region === p.region && x.place !== p.place && PLACES[x.place].kind !== '동' && x.service === p.service && !sameZone.includes(x)), p.slug, 'rel2').slice(0, 6);
-  const otherRegions = pool.filter((x) => x.region !== p.region && PLACES[x.place].kind === '시구' && x.service === p.service).slice(0, 5);
+  const otherRegions = rotate(pool.filter((x) => x.region !== p.region && PLACES[x.place].kind === '시구' && x.service === p.service), p.slug, 'rel3').slice(0, 5);
   return { samePlace, sameZone, sameRegion, otherRegions };
 }
 

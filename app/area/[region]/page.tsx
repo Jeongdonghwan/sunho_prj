@@ -38,7 +38,7 @@ export default function RegionHub({ params }: { params: { region: string } }) {
       <div className="wrap content page-top">
         <p className="eyebrow dark">{R.full}</p>
         <h1 className="page-title">{r} 정화조·변기막힘·누수탐지 지역 안내</h1>
-        <p className="prose-p">{R.full}는 {R.traits}입니다. {R.route}. 아래에서 동네와 서비스(정화조수리·변기막힘·누수탐지 업체)를 고르세요.</p>
+        <p className="prose-p">{R.full}는 {R.traits}입니다. {R.route}. 아래에서 동네와 서비스(정화조수리·변기막힘·누수탐지 업체{pages.some((p) => p.service === '하수구막힘') ? '·하수구막힘' : ''})를 고르세요.</p>
         <Actions />
         <section className="sec">
           <SectionHead no="01" title={`${r} 생활권별 건물 사정`} />

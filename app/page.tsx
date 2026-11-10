@@ -19,7 +19,7 @@ const SERVICES = [
   { t: '정화조', d: '수리 · 교체 · 방수 · 설비공사 · 오수펌프 · 브로와 설치', svc: '정화조수리', img: 'site-septic' },
   { t: '누수탐지공사', d: '누수탐지 · 누수공사 · 빗물누수 · 방수 · 복구 · 인테리어', svc: '누수탐지', img: 'site-leak' },
   { t: '변기', d: '막힘 · 역류 · 교체 · 누수 · 비데 설치 · 배관 고압세척', svc: '변기막힘', img: 'site-toilet' },
-  { t: '하수구', d: '막힘 뚫음 · 싱크대·세면대 · 고압세척 · 내시경 진단 · 악취', svc: '변기막힘', img: 'site-drain' },
+  { t: '하수구', d: '막힘 뚫음 · 싱크대·세면대 · 고압세척 · 내시경 진단 · 악취', svc: '하수구막힘', img: 'site-drain' },
 ];
 // 홈페이지 'Process' 4단계
 const PROCESS = [
@@ -83,7 +83,7 @@ export default function Home() {
           <SectionHead no="01" title="주요 서비스 4가지" sub="기존 홈페이지 서비스 메뉴 그대로입니다. 지역별 안내로 이어집니다." />
           <div className="svc-grid">
             {SERVICES.map((x, i) => {
-              const lk = svcLink(x.svc);
+              const lk = svcLink(x.svc) || svcLink('변기막힘'); // 하수구막힘 페이지는 5단계부터
               return (
                 <article key={x.t} className={`svc svc-${i}`} data-reveal style={{ transitionDelay: `${(i % 2) * 80}ms` }}>
                   <figure className="mask"><img src={`/img/${x.img}.webp`} alt={`${BRAND} ${x.t} 작업 사진`} loading="lazy" /></figure>

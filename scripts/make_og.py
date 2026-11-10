@@ -67,8 +67,8 @@ def main():
     force = '--force' in sys.argv
     OUT.mkdir(parents=True, exist_ok=True)
     pages = json.loads((ROOT / 'data' / 'site-pages.json').read_text(encoding='utf-8'))['pages']
-    cities = ['인천', '시흥', '부천', '강서구', '구로구']
-    sub = {'누수탐지': '열화상·청음·가스 탐지 · 누수보험 서류', '변기막힘': '막힘·역류 · 공용 오수관까지', '정화조수리': '수리·교체·방수 · A/S 2년', '정화조': '수리·교체·방수 · A/S 2년'}
+    cities = json.loads((ROOT / 'data' / 'places.json').read_text(encoding='utf-8'))['regionOrder']
+    sub = {'누수탐지': '열화상·청음·가스 탐지 · 누수보험 서류', '변기막힘': '막힘·역류 · 공용 오수관까지', '정화조수리': '수리·교체·방수 · A/S 2년', '정화조': '수리·교체·방수 · A/S 2년', '하수구막힘': '내시경 진단 · 고압세척 · A/S 2년'}
     jobs = [('home', '정화조·변기·누수탐지 선호환경', '365일 24시간 접수 · 수도권 전지역'),
             ('area', '지역별 정화조·변기막힘·누수탐지', '인천 · 시흥 · 부천 · 강서구 · 구로구'),
             ('cases', '정화조·변기·누수 시공사례', '시공사례 게시판 글 4건')] + \
@@ -79,7 +79,7 @@ def main():
     cj = json.loads((ROOT / 'data' / 'cases.json').read_text(encoding='utf-8'))
     tags = {c['img']: c['tags'] for c in cj['cases'] + cj['site']}
     imgs = {p.stem: base(p) for p in sorted((ROOT / 'public' / 'img').glob('*.jpg')) if p.stem in tags} if jobs else {}
-    group = {'누수탐지': '누수탐지', '변기막힘': '변기', '정화조수리': '정화조', '정화조': '정화조'}
+    group = {'누수탐지': '누수탐지', '변기막힘': '변기', '정화조수리': '정화조', '정화조': '정화조', '하수구막힘': '하수구'}
     svc_of = {p['slug']: group[p['service']] for p in pages}
     pool = lambda key: [im for k, im in imgs.items() if svc_of.get(key, '') in tags[k]] or list(imgs.values())
     for i, (key, title, sub) in enumerate(jobs, 1):
