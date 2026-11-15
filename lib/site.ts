@@ -43,6 +43,7 @@ export const TRUST = [
 //   OPEN_WAVE=1~4 (data/drip.json 일정: 오픈일 25% → 2일 50% → 4일 75% → 6일 100%)
 //   OPEN_WAVE=5·6 = 오픈 뒤 추가 키워드(하수구막힘·맞닿은 권역, drip.json extra: 11-12 / 11-14)
 export const OPEN_WAVE = Number(process.env.OPEN_WAVE || 4);
+export const UPDATED = '2026-11-16'; // content revision date - bump when page text changes
 
 // 표기만 다른 키워드 페이지(인천/인천시/인천광역시, 부평/부평구, 구월/구월동 …)는 대표 페이지로 canonical + 사이트맵 제외
 export const MERGE_VARIANTS = true;

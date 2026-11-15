@@ -7,3 +7,4 @@ tsconfig.tsbuildinfo
 deploy/
 _preview/
 source/raw/
+.lastmod.json

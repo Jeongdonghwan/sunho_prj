@@ -1,7 +1,7 @@
 // 공통 UI — 이모지 없이 선 아이콘, 각진 버튼, 번호 붙은 섹션 머리.
 // 사용자 요청: 전화번호가 보이는 모든 곳 바로 아래에 기존 홈페이지(sunhoenv.com) 링크 → HomeLink 를 전화번호와 한 묶음으로 쓴다.
 import Link from 'next/link';
-import { BRAND, CONTACT, BUSINESS, HOMEPAGE, HOMEPAGE_LABEL, KAKAO, tel } from '../lib/site';
+import { BRAND, CONTACT, BUSINESS, HOMEPAGE, HOMEPAGE_LABEL, KAKAO, UPDATED, tel } from '../lib/site';
 
 export const JsonLd = ({ data }: { data: object | object[] }) => (
   <>{(Array.isArray(data) ? data : [data]).map((d, i) => <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(d) }} />)}</>
@@ -75,7 +75,7 @@ export const Footer = () => (
       <div>
         <strong className="foot-brand">{BRAND}</strong>
         <p>정화조 · 누수탐지공사 · 변기 · 하수구 · 수도동파<br />인천 · 시흥 · 부천 · 서울 강서구 · 구로구 포함 수도권 전지역 · {CONTACT.hours}</p>
-        <p><Link href="/area/">지역 안내</Link> · <Link href="/cases/">시공사례</Link> · <a href="/rss.xml">RSS</a></p>
+        <p><Link href="/about/">소개</Link> · <Link href="/area/">지역 안내</Link> · <Link href="/cases/">시공사례</Link> · <a href="/rss.xml">RSS</a></p>
       </div>
       <ul className="foot-info">
         <li><span>상호</span>{BRAND} · 대표 {BUSINESS.ceo}</li>
@@ -85,7 +85,7 @@ export const Footer = () => (
         <li className="foot-phone"><span>대표번호</span><div><a href={tel}>{CONTACT.phone}</a><HomeLink /></div></li>
       </ul>
     </div>
-    <div className="wrap foot-bottom">© {new Date().getFullYear()} {BRAND} · 소비자만족지수 1위(상하수도설비) · 조달청 등록업체 · 본사 무상 A/S 2년 — 기존 홈페이지 표기 기준</div>
+    <div className="wrap foot-bottom">© {new Date().getFullYear()} {BRAND} · 소비자만족지수 1위(상하수도설비) · 조달청 등록업체 · 본사 무상 A/S 2년 — 기존 홈페이지 표기 기준 · 최종 수정 <time dateTime={UPDATED}>{UPDATED}</time></div>
   </footer>
 );
 
