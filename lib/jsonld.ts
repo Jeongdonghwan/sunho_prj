@@ -1,4 +1,4 @@
-import { SITE_URL, SITE_NAME, BRAND, CONTACT, BUSINESS, HOMEPAGE, KAKAO, YOUTUBE } from './site';
+import { SITE_URL, SITE_NAME, BRAND, CONTACT, BUSINESS, HOMEPAGE, KAKAO, YOUTUBE, UPDATED } from './site';
 
 export const businessJsonLd = () => ({
   '@context': 'https://schema.org',
@@ -50,6 +50,7 @@ export const serviceJsonLd = (o: { name: string; type: string; description: stri
   url: `${SITE_URL}${o.path}`,
   image: `${SITE_URL}${o.image}`,
   areaServed: { '@type': 'Place', name: o.area },
+  dateModified: UPDATED,
   provider: { '@id': `${SITE_URL}/#business` },
 });
 
