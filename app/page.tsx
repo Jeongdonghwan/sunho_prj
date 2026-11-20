@@ -6,7 +6,7 @@ import { faqJsonLd, itemListJsonLd } from '../lib/jsonld';
 import { Actions, IconArrow, IconMsg, JsonLd, PhoneBlock, SectionHead } from '../components/Common';
 
 const HOME_TITLE = `${BRAND} | 정화조수리·변기막힘·누수탐지 업체`;
-const HOME_DESC = '정화조·누수탐지공사·변기·하수구 전문 선호환경. 365일 24시간 접수, 수도권 전지역 출동. 진단 후 견적, 동의 후 작업, 본사 무상 A/S 2년. 인천·시흥·부천·강서·구로 지역 안내.';
+const HOME_DESC = '정화조·누수탐지·변기·하수구 선호환경. 수도권 전지역 365일 24시간 출동, 진단 후 견적·동의 후 작업, 무상 A/S 2년.';
 export const metadata: Metadata = {
   title: HOME_TITLE,
   description: HOME_DESC,
