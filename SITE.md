@@ -50,3 +50,7 @@ bash scripts/deploy.sh <단계> <https://도메인>   # git remote 필요
 - [ ] GitHub 저장소(deploy 브랜치용)
 - [ ] 본사 주소 '부평구 항동로 148' 확인
 - [ ] 서치어드바이저·서치콘솔 소유확인 코드 (`app/layout.tsx`)
+
+## h1 수식어·레이 구조 적용(2026-11-24)
+키워드 페이지(`app/[slug]/page.tsx`, 조합 `lib/compose.ts` composeRay·description)를 레이 모범 구조로: 분류 줄 → h1(`키워드` + `.hero-sub` 수식어, 해시로 고정) → 설명 → "{키워드} 핵심 요약"(결론 + 사실 4칸) → 번호 절 6개(한 문단, 4개 h2 에 키워드 전체) → "{키워드} 자주 묻는 질문" → 시공 사진 → 관련 링크 3묶음(최대 11개). description 45~80자(키워드 — 관련 키워드 + 현장 사실 + 1666-8086). 주소·title·canonical 그대로. 점검 `python -I scripts/ray_check.py out`.
+측정(열린 1,818쪽, OPEN_WAVE=6): h1 중복 0 · 키워드 든 h2 6개/쪽 · 본문(main) 평균 2,469자 · 절 문단 평균 203자 · 같은 서비스 묶음 같은 문장 평균 최고 26%(쌍 최대 48%) · description 56~80자 중복 0 · 조사 오류 0.

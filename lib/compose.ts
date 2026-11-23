@@ -423,7 +423,19 @@ export function compose(p: Page): Composed {
     정화조: `${P.admin} ${p.service === '정화조' ? '정화조' : '정화조수리'}. 균열·누수·역류·오수펌프·브로와 진단 후 수리·교체·방수까지 본사 시공.`,
     하수구: `${P.admin} 하수구막힘. 싱크대·세면대·베란다 막힘과 악취를 내시경으로 확인하고 고압세척으로 뚫습니다. 진단 후 견적.`,
   };
-  const description = `${descBody[g]} ${BRAND} ${CONTACT.phone}`;
+  // description 45~80자 (§5-3, 2026-11-24): 키워드 — 관련 키워드 2~3개 + 페이지 사실 + 상담 전화
+  void descBody;
+  const DREL: Record<string, [string[], (w: string) => string]> = {
+    누수탐지: [['열화상', '청음', '가스 탐지'], (w) => `${j(w, '으로')} 지점을 찾는 누수탐지`],
+    변기: [['막힘', '역류', '변기 교체'], (w) => `${w}까지 보는 변기 작업`],
+    하수구: [['내시경 진단', '고압세척', '악취 차단'], (w) => `${w}까지 하는 하수구 작업`],
+    정화조: [['균열', '오수펌프', '브로와'], (w) => `${w}까지 보는 정화조 수리`],
+  };
+  const [dw, dt] = DREL[g];
+  const dSpot = spots.find((x) => !x.includes(nm) && !x.includes(lb));
+  const dfact = dSpot ? `${dSpot} 주변 ${cn} 출동` : `${cn} 현장 출동`;
+  const description = [3, 2].flatMap((n) => [`${p.kw} — ${dt(dw.slice(0, n).join('·'))}. ${dfact} ${CONTACT.phone}`, `${p.kw} — ${dt(dw.slice(0, n).join('·'))}. 상담 ${CONTACT.phone}`])
+    .find((x) => x.length <= 80) || `${p.kw} — ${dt(dw[0])}. ${CONTACT.phone}`;
 
   const eyebrow = P.kind === '시구' ? R.full === P.admin ? R.full : P.admin : P.admin;
   const lead = pick(g === '누수탐지' ? [
@@ -627,6 +639,63 @@ export function compose(p: Page): Composed {
     title, description, h1: p.kw, eyebrow, lead, label: lb, answer, summary, hero, intro, region, view, symptoms, items,
     cases, steps, stepsHeading: `${lb} ${svc.short} 진행 순서`, tell, info, faq, closing, ticker, cta,
   };
+}
+
+// ---- 레이 모범 구조 (2026-11-24) — 분류 줄 → h1(키워드+수식어) → 설명 → 핵심 요약 → 번호 절 6개(한 문단) → FAQ → 관련 링크 ----
+// 규칙: ~/.claude/skills/programmatic-seo/references/composer-patterns.md §5-1·5-2·5-3. 사실은 위 compose() 재료 안에서만.
+export interface Ray { cat: string; h1sub: string; summary: string; sections: { h: string; p: string }[] }
+const KW_AT = new Set([0, 1, 2, 4]); // 절 6개 중 4개 h2 에 키워드 전체
+const SEQ = ['먼저', '이어서', '그다음', '끝으로'];
+export function composeRay(p: Page, c: Composed = compose(p)): Ray {
+  const P = PLACES[p.place];
+  const R: Region = REGIONS[p.region];
+  const svc = SVC[p.service];
+  const g = svcGroup(p.service);
+  const s = p.slug;
+  const lb = p.label;
+  const nm = P.name;
+  const cn = CTX_NOUN[P.ctx];
+  const spot = c.region.spots.find((x) => !x.includes(nm) && !x.includes(lb) && !p.kw.includes(x));
+  const head = (i: number, subs: string[]) => { const sub = pick(subs, s, `h2-${i}`); return KW_AT.has(i) ? `${p.kw}: ${sub}` : sub; };
+  // 고정 항목 이름에 현장 이름을 붙여 같은 주제 페이지끼리 문장이 겹치지 않게
+  const loc = (i: number, x: string) => `${pick([`${nm} 현장의 `, ''], s, `loc${i}`)}${x}`;
+  const near = spot ? `${spot} 주변 ${cn}` : '';
+  const H1: Record<string, string[]> = {
+    누수탐지: ['장비로 지점 찾고 최소 범위만 열기', '탐지·공사·보험 서류까지 한 번에', ...(near ? [`${near} 누수 위치부터`] : [])],
+    변기: ['변기 문제인지 오수관 문제인지부터', '막힘·역류·교체까지 원인 확인', ...(near ? [`${near} 역류 원인까지`] : [])],
+    하수구: ['내시경으로 보고 고압세척으로 뚫기', '뚫어도 다시 막히는 원인까지', ...(near ? [`${near} 관 속부터 확인`] : [])],
+    정화조: ['청소로 안 끝나는 냄새·역류 진단', '수리·교체·방수 중 맞는 방법', ...(near ? [`${near} 정화조 진단부터`] : [])],
+  };
+  const h1sub = pick(H1[g], s, 'h1sub');
+  const summary = [c.answer, pick([
+    `${nm} 현장도 진단 결과를 사진으로 보여 드리고, 견적에 동의하신 뒤에만 작업합니다.`,
+    `${nm} 상담은 ${j(CONTACT.phone, '으로')} ${CONTACT.hours}이며, 본사 직접 시공 건은 2년 무상 A/S입니다.`,
+  ], s, 'sum')].join(' ');
+  const sym = c.symptoms.items;
+  const its = c.items.list.slice(0, 4);
+  const sections = [
+    { h: head(0, ['건물과 배관 사정', '동네 현장 특징', '이런 건물이 많은 곳']), p: [...c.region.paras.slice(0, 2), c.intro[0]].join(' ') },
+    { h: head(1, ['건물에 맞는 확인 순서', '현장에서 먼저 보는 곳']), p: c.view.paras.join(' ') },
+    { h: head(2, ['의심 증상', '이런 신호가 먼저 보입니다']), p: [
+      `${nm} ${cn}에서 ${svc.word} 문의는 ‘${sym[0]}’, ‘${sym[1]}’, ‘${sym[2]}’ 같은 말로 시작하는 경우가 많습니다.`,
+      sym[4] ? `‘${sym[3]}’, ‘${sym[4]}’ 같은 신호도 함께 봅니다.` : '',
+      `연락 주실 때 ${j(rotate(c.tell.items, s, 'tell3').slice(0, 3).join(', '), '을')} 알려 주시면 좋습니다.`,
+      c.tell.text,
+    ].filter(Boolean).join(' ') },
+    { h: head(3, [`${nm} 현장에서 하는 일`, '서비스 항목']), p: [c.items.text, ...its.map((x, i) => loc(10 + i, `${x.name}: ${end(x.d.split('. ')[0])}`))].join(' ') },
+    { h: head(4, ['진행 순서', '접수부터 마무리까지']), p: c.steps.map((x, i) => `${SEQ[i]} ${pick([`${nm} `, ''], s, `st${i}`)}${x.title} 단계입니다. ${end(x.text)}`).join(' ') },
+    { h: head(5, [`${nm} 상담과 출동`, '연락하면 정해지는 것']), p: [
+      end(R.route),
+      pick([
+        `${nm} 주소와 증상, 현장 사진을 카톡상담으로 먼저 보내 주시면 통화 때 장비와 부품까지 정해집니다.`,
+        `${nm}에서 언제부터 어떤 증상이 있었는지만 알려 주셔도 가까운 기사가 일정을 바로 잡습니다.`,
+        `${nm} ${cn} 현장은 건물 종류와 층수를 들으면 진단 순서가 정해집니다.`,
+      ], s, 'cs0'),
+      `${nm} 상담은 ${j(CONTACT.phone, '으로')} 받고, 본사는 ${BIZ_ADDR}입니다.`,
+      c.region.nearby.length >= 2 ? `${j(nm, '과')} 가까운 ${c.region.nearby.slice(0, 3).join('·')} 쪽 문의도 같은 번호로 받습니다.` : '',
+    ].filter(Boolean).join(' ') },
+  ];
+  return { cat: `${c.eyebrow} · ${svc.short}`, h1sub, summary, sections };
 }
 
 export { SVC };
