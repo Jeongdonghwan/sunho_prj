@@ -390,7 +390,7 @@ export interface Composed {
   ticker: string[]; cta: string;
 }
 
-export function compose(p: Page): Composed {
+function composeBase(p: Page): Composed {
   const P = PLACES[p.place];
   const R: Region = REGIONS[p.region];
   const Z: Zone = ZONES[P.zone];
@@ -646,7 +646,7 @@ export function compose(p: Page): Composed {
 export interface Ray { cat: string; h1sub: string; summary: string; sections: { h: string; p: string }[] }
 const KW_AT = new Set([0, 1, 2, 4]); // 절 6개 중 4개 h2 에 키워드 전체
 const SEQ = ['먼저', '이어서', '그다음', '끝으로'];
-export function composeRay(p: Page, c: Composed = compose(p)): Ray {
+export function composeRay(p: Page, c: Composed = composeBase(p)): Ray {
   const P = PLACES[p.place];
   const R: Region = REGIONS[p.region];
   const svc = SVC[p.service];
@@ -666,7 +666,17 @@ export function composeRay(p: Page, c: Composed = compose(p)): Ray {
     하수구: ['내시경으로 보고 고압세척으로 뚫기', '뚫어도 다시 막히는 원인까지', ...(near ? [`${near} 관 속부터 확인`] : [])],
     정화조: ['청소로 안 끝나는 냄새·역류 진단', '수리·교체·방수 중 맞는 방법', ...(near ? [`${near} 정화조 진단부터`] : [])],
   };
-  const h1sub = pick(H1[g], s, 'h1sub');
+  // title 앞부분 = h1 (§5-1, 2026-11-24): "키워드 수식어"가 40자를 넘으면 더 짧은 벌을 고르고, 그래도 넘으면 구 단위로 자른다
+  const fitSub = (cands: string[]) => {
+    const max = 40 - p.kw.length - 1;
+    const r = rotate(cands, s, 'h1sub');
+    const ok = r.find((x) => x.length <= max);
+    if (ok) return ok;
+    const w = [...r].sort((a, b) => a.length - b.length)[0].split(' ');
+    while (w.length > 1 && w.join(' ').length > max) w.pop();
+    return w.join(' ');
+  };
+  const h1sub = fitSub(H1[g]);
   const summary = [c.answer, pick([
     `${nm} 현장도 진단 결과를 사진으로 보여 드리고, 견적에 동의하신 뒤에만 작업합니다.`,
     `${nm} 상담은 ${j(CONTACT.phone, '으로')} ${CONTACT.hours}이며, 본사 직접 시공 건은 2년 무상 A/S입니다.`,
@@ -699,3 +709,9 @@ export function composeRay(p: Page, c: Composed = compose(p)): Ray {
 }
 
 export { SVC };
+
+// title = "키워드 수식어 | 상호" — 앞부분은 h1 과 같은 글자 (2026-11-24). og·twitter·rss 도 이 값을 쓴다.
+export function compose(p: Page): Composed {
+  const c = composeBase(p);
+  return { ...c, title: `${p.kw} ${composeRay(p, c).h1sub} | ${BRAND}` };
+}
