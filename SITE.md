@@ -55,3 +55,4 @@ bash scripts/deploy.sh <단계> <https://도메인>   # git remote 필요
 키워드 페이지(`app/[slug]/page.tsx`, 조합 `lib/compose.ts` composeRay·description)를 레이 모범 구조로: 분류 줄 → h1(`키워드` + `.hero-sub` 수식어, 해시로 고정) → 설명 → "{키워드} 핵심 요약"(결론 + 사실 4칸) → 번호 절 6개(한 문단, 4개 h2 에 키워드 전체) → "{키워드} 자주 묻는 질문" → 시공 사진 → 관련 링크 3묶음(최대 11개). description 45~80자(키워드 — 관련 키워드 + 현장 사실 + 1666-8086). 주소·title·canonical 그대로. 점검 `python -I scripts/ray_check.py out`.
 측정(열린 1,818쪽, OPEN_WAVE=6): h1 중복 0 · 키워드 든 h2 6개/쪽 · 본문(main) 평균 2,469자 · 절 문단 평균 203자 · 같은 서비스 묶음 같은 문장 평균 최고 26%(쌍 최대 48%) · description 56~80자 중복 0 · 조사 오류 0.
 title: 키워드 페이지 title 을 "키워드 수식어 | 상호"로 변경(2026-11-24) — 앞부분은 h1 과 같은 글자, 앞부분 40자·전체 60자 이하(넘으면 짧은 수식어 벌), og·twitter·rss 같은 값, og:site_name 상호. 빌드 없는 점검 `node scripts/title_check.js <OPEN_WAVE>` (중복 0 · h1 불일치 0).
+title 40자(2026-11-24): 네이버 권장에 맞춰 title 전체 40자 이하 — "키워드 수식어 | 상호"가 40자를 넘으면 상호를 뺀다(상호는 og:site_name). 점검 기준도 40자.
